@@ -3,7 +3,6 @@
 #########################################
 # Author: Matheus Guedes Crispim        #
 # E-mail: matheus.guedes@dce.ufpb.br    #
-# Tel: (83)9.9917-2286					#
 # Date: 28/04/2016                      #
 #########################################
 	
