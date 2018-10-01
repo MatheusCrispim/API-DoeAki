@@ -1,6 +1,7 @@
 <?php
 	
 	require_once (__DIR__)."/../controller/InstitutionController.php";
+	require_once (__DIR__)."/config.php";
 
 	class Routes{
 		
@@ -70,7 +71,7 @@
 		}
 		
 		
-		private function getPaths(){
+		public function getPaths(){
 			$request_uri = explode('?', $_SERVER['REQUEST_URI'], 2);
 			$paths=explode('/', $request_uri[0]);
 			$filteredPaths=array();
@@ -81,7 +82,10 @@
 				}	
 			}
 			
-			array_shift($filteredPaths);
+			$apiPath=explode('/', APIPATH);
+			$filteredPaths=array_diff($filteredPaths, $apiPath);
+			$filteredPaths=array_values($filteredPaths);
+			
 			return $filteredPaths;
 		}
 						
