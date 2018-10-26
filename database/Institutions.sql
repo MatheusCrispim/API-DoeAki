@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: 25-Set-2018 às 07:18
+-- Generation Time: 26-Out-2018 às 02:58
 -- Versão do servidor: 5.6.30-1
 -- PHP Version: 7.2.4-1+b1
 
@@ -27,23 +27,13 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `Institutions` (
-  `ID` int(11) NOT NULL,
-  `CNPJ` varchar(10) NOT NULL,
-  `NAME` varchar(100) NOT NULL,
-  `ADRESS` varchar(100) NOT NULL,
-  `DESCRIPTION` text NOT NULL,
-  `CAUSE` varchar(100) NOT NULL,
-  `BANKERDATA` int(11) NOT NULL,
-  `LATITUDE` float NOT NULL,
-  `LONGITUDE` float NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Extraindo dados da tabela `Institutions`
---
-
-INSERT INTO `Institutions` (`ID`, `CNPJ`, `NAME`, `ADRESS`, `DESCRIPTION`, `CAUSE`, `BANKERDATA`, `LATITUDE`, `LONGITUDE`) VALUES
-(1, '111111111', 'Instituição', 'Avenida Santa Elizabete, Número 1', 'Fazemos Caridade', 'Caridade', 2013548578, -7.0795, -34.8481);
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `image` varchar(1000) NOT NULL,
+  `description` text NOT NULL,
+  `latitude` float NOT NULL,
+  `longitude` float NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Indexes for dumped tables
@@ -53,7 +43,7 @@ INSERT INTO `Institutions` (`ID`, `CNPJ`, `NAME`, `ADRESS`, `DESCRIPTION`, `CAUS
 -- Indexes for table `Institutions`
 --
 ALTER TABLE `Institutions`
-  ADD PRIMARY KEY (`ID`,`CNPJ`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -63,7 +53,7 @@ ALTER TABLE `Institutions`
 -- AUTO_INCREMENT for table `Institutions`
 --
 ALTER TABLE `Institutions`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
