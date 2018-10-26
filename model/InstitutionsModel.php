@@ -3,7 +3,7 @@
 	require_once (__DIR__)."/../dao/DatabaseFunctions.php";
 
 	
-	class InstitutionModel{
+	class InstitutionsModel{
 	
 		
 		private $db;

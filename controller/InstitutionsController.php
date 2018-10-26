@@ -1,15 +1,15 @@
 <?php 
-	require_once (__DIR__)."/../model/InstitutionModel.php";
+	require_once (__DIR__)."/../model/InstitutionsModel.php";
 	require_once (__DIR__)."/../view/GetView.php";
 	
 	
-	class InstitutionController{
+	class InstitutionsController{
 	
 		private $model;
 		private $getView;
 		
 		public function __construct(){
-			$this->model=new InstitutionModel();
+			$this->model=new InstitutionsModel();
 			$this->getView=new GetView();
 		}
 

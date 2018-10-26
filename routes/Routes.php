@@ -7,7 +7,7 @@
 		
 		private $defaultController;
 		private $usersController;
-		private $institutionController;
+		private $institutionsController;
 		private $data;
 		private $paths;
 
@@ -15,7 +15,7 @@
 		public function __construct(){
 			$this->defaultController=new DefaultController();
 			$this->usersController=new UsersController();
-			$this->institutionController=new InstitutionController();
+			$this->institutionsController=new InstitutionsController();
 			$this->paths=$this->getPaths();
 		}
 		
@@ -44,7 +44,7 @@
 		
 		
 		public function get(){
-			$controller=$this->institutionController;
+			$controller=$this->institutionsController;
 			$context=isset($this->paths[1]) ? $this->paths[1] : null;
 			switch($context){		
 				case "ATTRACTIONS":
@@ -75,11 +75,11 @@
 			
 					
 		private function getInstitutions(){
-			$controller=$this->institutionController;
+			$controller=$this->institutionsController;
 			$searchType=isset($this->paths[2]) ? $this->paths[2] : null;
 			switch($searchType){		
 				case "NEARBY":
-					$controller->getNearbyInstituions($this->data);
+					$controller->getNearbyInstitutions($this->data);
 					break;
 				case "NORMAL":
 					$controller->getInstitutions($this->data);
