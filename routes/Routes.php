@@ -1,19 +1,22 @@
 <?php
-	
-	require_once (__DIR__)."/../controller/InstitutionController.php";
+
+	require_once (__DIR__)."/../controller/Controllers.php";
 	require_once (__DIR__)."/config.php";
 
 	class Routes{
 		
+		private $defaultController;
+		private $usersController;
 		private $institutionController;
 		private $data;
 		private $paths;
 
 		
 		public function __construct(){
+			$this->defaultController=new DefaultController();
+			$this->usersController=new UsersController();
 			$this->institutionController=new InstitutionController();
 			$this->paths=$this->getPaths();
-			$this->data=json_decode(file_get_contents("php://input"), true);
 		}
 		
 		
@@ -23,34 +26,51 @@
 		
 		
 		public function action(){
-			$controller=$this->institutionController;
 			$action=isset($this->paths[0]) ? $this->paths[0] : null;
 			switch($action){		
 				case "GET":
+					$this->data=$_GET;
 					$this->get();
 					break;
 				case "POST":
+					$this->data=json_decode(file_get_contents("php://input"), true);
+					$this->post();
 					break;
 				default:
-					$controller->fail("Request method not set");
+					$this->defaultController->fail("Request method not set");
 					break;
 			}
 		}
-
+		
 		
 		public function get(){
 			$controller=$this->institutionController;
 			$context=isset($this->paths[1]) ? $this->paths[1] : null;
 			switch($context){		
-				case "INSTITUTION":
+				case "ATTRACTIONS":
 					$this->getInstitutions();
 					break;
 				case "USER":
 					break;
 				default:
-					$controller->fail("Can't get nothing");
+					$this->defaultController->fail("Can't get nothing");
 					break;
 			}
+		}
+		
+		
+		public function post(){
+			$context=isset($this->paths[1]) ? $this->paths[1] : null;
+			switch($context){		
+				case "INSTITUTIONS":
+					break;
+				case "USER":
+					$this->postUser();
+					break;
+				default:
+					$this->defaultController->fail("Can't post nothing");
+					break;
+			}			
 		}
 			
 					
@@ -59,7 +79,7 @@
 			$searchType=isset($this->paths[2]) ? $this->paths[2] : null;
 			switch($searchType){		
 				case "NEARBY":
-					$controller->getNearbyInstitutions($this->data);
+					$controller->getNearbyInstituions($this->data);
 					break;
 				case "NORMAL":
 					$controller->getInstitutions($this->data);
@@ -71,7 +91,13 @@
 		}
 		
 		
-		public function getPaths(){
+		private function postUser(){
+			$controller=$this->usersController;
+			$controller->signup($this->data);
+		}
+		
+		
+		private function getPaths(){
 			$request_uri = explode('?', $_SERVER['REQUEST_URI'], 2);
 			$paths=explode('/', $request_uri[0]);
 			$filteredPaths=array();

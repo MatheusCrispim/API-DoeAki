@@ -24,8 +24,6 @@
 		public function fail($message){
 			$this->getView->fail($message);
 		}
-		
-		
 	}
 
 ?>

@@ -14,30 +14,30 @@ class DatabaseFunctions{
 	private $cmmd;
 	
 	public function __construct(){
-			$db=new Connection();
-			self::$dbh=$db->getConnection();				
-		}
+		$db=new Connection();
+		self::$dbh=$db->getConnection();				
+	}
 			
 	//create, drop, insert, select, count, update, delete 
 	public function createTable($tb, $data, $engine, $charset){
 		$slice=$this->organize($data, ", ", "data");
 		$this->cmmd="CREATE TABLE IF NOT EXISTS `".$tb."` (".$slice.") ENGINE=".$engine."  DEFAULT CHARSET=".$charset.";";
-		$this->execute($this->cmmd);
-		}
+		return $this->execute($this->cmmd);
+	}
 		
 		
 	public function dropTable($tb){
 		$this->cmmd="DROP TABLE `".$tb."`;";
-		$this->execute($this->cmmd);
-		}
+		return $this->execute($this->cmmd);
+	}
 		
 		
 	public function insert($tb, $data){
 		$slice=$this->organize($data, ", ", "key");
 		$slice1=$this->organize($data, ", ", "key", ":");
 		$this->cmmd="INSERT INTO `".$tb."` (".$slice.") VALUES (".$slice1.");";
-		$this->execute($this->cmmd, $data);
-		}
+		return $this->execute($this->cmmd, $data);
+	}
 		
 		
 	public function select($item, $tb, $where=array(), $operator=""){
@@ -47,19 +47,20 @@ class DatabaseFunctions{
 			$this->cmmd="SELECT ".$item." FROM `".$tb."` WHERE ".$slice.";";
 		}else{
 			$this->cmmd="SELECT ".$item." FROM `".$tb."`;";
-			}
+		}
 		$search=$this->execute($this->cmmd, $where);
 		return $search->fetchAll();
-		}
+	}
 		
 		
 	public function count($item, $tb, $where=array(), $op=""){
 		$item="COUNT(".$item.")";
 		$countArr=$this->select($item, $tb, $where, $op);
+
 		foreach($countArr as $count){
-			return $count;
-			}
+			return get_object_vars($count)[$item];
 		}
+	}
 
 
 	public function update($tb, $data, $where, $operator="" ){
@@ -72,32 +73,32 @@ class DatabaseFunctions{
 		foreach($where as $key=>$here){
 			unset($where[$key]);
 			$where[$pre.$key]=$here;
-			}
-		$this->execute($this->cmmd, array_merge($data, $where));
 		}
+		$this->execute($this->cmmd, array_merge($data, $where));
+	}
 
 
 	public function delete($tb, $where, $operator=""){
 		$slice=$this->organize($where, " $operator ", "equal_key", ":");
 		$this->cmmd="DELETE FROM `".$tb."` WHERE ".$slice.";";
-		$this->execute($this->cmmd, $where);
-		}
+		return $this->execute($this->cmmd, $where);
+	}
 
 
 	//executing and formatting methods
 	private function exec($cmmd){
 		try {
 			$exec=self::$dbh->exec($cmmd);
-
+			
 			if($exec->errorInfo()[2]!=null){
 				 die(print_r($exec->errorInfo(), true));		
-				}
+			}
 			return $exec;
 			
-			} catch (PDOException $e) {
+		} catch (PDOException $e) {
 				die("DB ERROR: ". $e->getMessage());
-			}						
-		}
+		}						
+	}
 		
 		
 	public function execute($cmmd, $data=array()){	
@@ -111,7 +112,8 @@ class DatabaseFunctions{
 			return $prep;	
 
 			} catch (PDOException $e) {
-				die("DB ERROR: ". $e->getMessage());
+				header("HTTP/1.0 404 Not Found");
+				die("ERROR: Malformed request\n". $e->getMessage());
 			}		
 		}
 
@@ -126,35 +128,35 @@ class DatabaseFunctions{
 				foreach($data as $key=>$d){
 					if($fv==0){
 						$c.=$pre.$key;
-						}else{
+					}else{
 						$c.=$sep.$pre.$key;
-						}
-					$fv++;
 					}
+					$fv++;
+				}
 			}else if($use=="DATA"){
 				foreach($data as $d){
 					if($fv==0){
 						$c.=$d;
-						}else{
+					}else{
 						$c.=$sep.$d;
-						}
-					$fv++;
 					}
+					$fv++;
+				}
 			}else if($use=="EQUAL_KEY"){
 				foreach($data as $key=>$d){
 					if($fv==0){
 						$c.=$key."=".$pre.$key;
-						}else{
+					}else{
 						$c.=$sep.$key."=".$pre.$key;
-						}
+					}
 					$fv++;
-					}				
-				}//end else if
-			}//end if empty
+				}				
+			}//end else if
+		}//end if
 		return $c;
-		}
-		
 	}
+		
+}
 	
 ?>
 
