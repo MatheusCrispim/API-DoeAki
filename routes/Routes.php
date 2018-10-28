@@ -94,7 +94,10 @@
 		private function postUsers(){
 			$context=isset($this->paths[2]) ? $this->paths[2] : null;
 			$controller=$this->usersController;
-			switch($context){		
+			switch($context){
+				case "ISLOGGED":
+					$controller->isLogged($this->data);
+					break;
 				case "LOGIN":
 					$controller->login($this->data);
 					break;

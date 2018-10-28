@@ -17,10 +17,11 @@
 		}
 		
 	
+
 		public function login($rawData){
-			$rawData=$this->validateRawData($rawData); 
-			$email=isset($rawData['email']) ? $rawData['email'] : "";
-			$password=isset($rawData['password']) ? $rawData['password'] : "";
+			$data=$this->validateRawData($rawData); 
+			$email=isset($data['email']) ? $data['email'] : "";
+			$password=isset($data['password']) ? $data['password'] : "";
 			
 			$result=array(
 				'email'=>false,
@@ -51,10 +52,20 @@
 					$result['session']=$this->session->getId();
 				}
 			}
-
+			
 			return $result;
 		}
 
+
+		public function isLogged($rawData){
+			$data=$this->validateRawData($rawData);
+			$id=isset($data['session']) ? $data['session'] : "";
+
+			$result['logged']=$this->session->sessionIsValid($id);
+			$this->session->sessionResume($id);
+
+			return $result;
+		}
 
 		//This function logout the user
 		public function logout($rawData){

@@ -18,6 +18,7 @@
 		
 		
 		public function fail($message){
+			echo "A";
 			header("HTTP/1.0 404 Not Found");
 			die("ERROR: ".$message);
 		}

@@ -5,7 +5,7 @@
 	class PostView{
 		
 		public function result($result){
-			echo json_encode($result, JSON_UNESCAPED_UNICODE);
+			echo "[".json_encode($result, JSON_UNESCAPED_UNICODE)."]";
 		}
 	
 		public function fail($message){

@@ -24,21 +24,27 @@ class Session{
 
         session_id($id);
         session_start();
+        $_SESSION['user_email']=$userEmail;
     }
 
 
     //This function Resume a session
     public function sessionResume($id){
+        $result=false;
         $validSession=$this->sessionIsValid($id);
         if($validSession){
             $this->id=$id;
+            $result=true;
 
             $dataBind=array("session_id"=>$id);
             $this->user=get_object_vars($this->db->select("user_email", "Session",   $dataBind)[0])['user_email'];
             
             session_id($id);
-            session_start();    
+            session_start();  
+            $_SESSION['user_email']=$this->user; 
         }
+
+        return $result;
     }
 
 
@@ -63,7 +69,7 @@ class Session{
    //This function verify  if a session is valid
     public function sessionIsValid($id){  
         $dataBind=array("session_id"=>$id);
-        echo $foundSession=$this->db->count("*", "Session", $dataBind);
+        $foundSession=$this->db->count("*", "Session", $dataBind);
         $result=false;
 
         if($foundSession>0){

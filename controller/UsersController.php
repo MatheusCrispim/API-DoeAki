@@ -13,6 +13,10 @@
 			$this->postView=new PostView();
 		}
 		
+		public function isLogged($data){
+			$this->postView->result($this->model->isLogged($data));
+		}	
+
 		public function login($data){
 			$this->postView->result($this->model->login($data));
 		}	
