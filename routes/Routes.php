@@ -47,7 +47,7 @@
 			$controller=$this->institutionsController;
 			$context=isset($this->paths[1]) ? $this->paths[1] : null;
 			switch($context){		
-				case "ATTRACTIONS":
+				case "INSTITUTIONS":
 					$this->getInstitutions();
 					break;
 				case "USER":
@@ -65,7 +65,7 @@
 				case "INSTITUTIONS":
 					break;
 				case "USER":
-					$this->postUser();
+					$this->postUsers();
 					break;
 				default:
 					$this->defaultController->fail("Can't post nothing");
@@ -91,9 +91,20 @@
 		}
 		
 		
-		private function postUser(){
+		private function postUsers(){
+			$context=isset($this->paths[2]) ? $this->paths[2] : null;
 			$controller=$this->usersController;
-			$controller->signup($this->data);
+			switch($context){		
+				case "LOGIN":
+					$controller->login($this->data);
+					break;
+				case "SIGNUP":
+					$controller->signup($this->data);
+					break;
+				default:
+					$this->defaultController->fail("Can't post nothing");
+					break;
+			}	
 		}
 		
 		

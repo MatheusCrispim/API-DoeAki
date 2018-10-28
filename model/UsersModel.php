@@ -1,6 +1,7 @@
 <?php
 	
 	require_once (__DIR__)."/../dao/DatabaseFunctions.php";
+	require_once (__DIR__)."/../middleware/Session.php";
 
 	
 	class UsersModel{
@@ -13,56 +14,88 @@
 			$this->db=new DatabaseFunctions();
 		}
 		
-		public function login($data){
-			
-		}
-
 	
-		public function signup($rawData){
+		public function login($rawData){
 			
-			$data=array();
-			if(isset($rawData)){
-				foreach($rawData as $key=>$content){
-					$data[strtolower($key)]=$content;
+			$rawData=$this->validateRawData($rawData); 
+			$email=isset($rawData['email']) ? $rawData['email'] : "";
+			$password=isset($rawData['password']) ? $rawData['password'] : "";
+			
+			$result=array(
+				'email'=>false,
+				'password'=>false,
+				'successfull'=>false,
+				'session'=>null
+			);
+	
+			$emailValidation=$this->verifyEmail($email);
+			$passwordValidation=$this->verifyPassword($password);
+			
+			if($emailValidation){
+				$result['email']=true;	
+			}
+			if($passwordValidation){
+				$result['password']=true;	
+			}
+
+			$validation=($emailValidation and $passwordValidation);
+			
+			if($validation){
+				$data=array("email"=>$email, "password"=>$password);
+				$foundUsers=$this->db->count("*", "Users", $data, "and");
+				
+				if($foundUsers>0){
+					$session=new Session();
+					$session->sessionStart($email);
+					$result['successfull']=true;
+					$result['session']=$session->getId();
+
 				}
 			}
-			
+
+			return $result;
+		}
+
+
+		//This function signup the user in the system
+		public function signup($rawData){
+			$data=$this->validateRawData($rawData);		
 			$name=isset($data['name']) ? $data['name'] : "";
 			$email=isset($data['email']) ? $data['email'] : "";
 			$password=isset($data['password']) ? $data['password'] : "";
 			
 			$result=array(
-					'name'=>"false",
-					'email'=>"false",
-					'password'=>"false",
-					'validation'=>"false",
-					'successfull'=>"false"
+					'name'=>false,
+					'email'=>false,
+					'password'=>false,
+					'validation'=>false,
+					'successfull'=>false
 				);
 			
 			$nameValidation=$this->verifyName($name);
 			$emailValidation=$this->verifyEmail($email);
 			$passwordValidation=$this->verifyPassword($password);
 			
-			if($nameValidation==true){
-				$result['name']="true";	
+			if($nameValidation){
+				$result['name']=true;	
 			}
-			if($emailValidation==true){
-				$result['email']="true";	
+			if($emailValidation){
+				$result['email']=true;	
 			}
-			if($passwordValidation==true){
-				$result['password']="true";	
+			if($passwordValidation){
+				$result['password']=true;	
 			}
 			
 			$validation=($nameValidation and $emailValidation and $passwordValidation);
 			
-			if($validation==true){
-				$result['validation']="true";
+			if($validation){
+				$result['validation']=true;
 				$emailBind=array('email'=>$data['email']);
 				$foundUsers=$this->db->count("*", "Users", $emailBind);
 				
 				if($foundUsers==0){
 					$this->db->insert("Users", $data);
-					$result['successfull']="true";
+					$result['successfull']=true;
 				}
 				
 			}
@@ -70,6 +103,17 @@
 			return $result;
 		}
 		
+
+		//This function validates raw data sent in the request
+		public function validateRawData($rawData){
+			$data=array();
+			if(isset($rawData)){
+				foreach($rawData as $key=>$content){
+					$data[strtolower($key)]=$content;
+				}
+			}
+			return $data;
+		}
 		
 		//Name validation
 		public function verifyName($name){
