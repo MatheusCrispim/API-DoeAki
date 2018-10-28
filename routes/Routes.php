@@ -98,6 +98,9 @@
 				case "LOGIN":
 					$controller->login($this->data);
 					break;
+				case "LOGOUT":
+					$controller->logout($this->data);
+					break;
 				case "SIGNUP":
 					$controller->signup($this->data);
 					break;

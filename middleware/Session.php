@@ -32,6 +32,7 @@ class Session{
         $validSession=$this->sessionIsValid($id);
         if($validSession){
             $this->id=$id;
+
             $dataBind=array("session_id"=>$id);
             $this->user=get_object_vars($this->db->select("user_email", "Session",   $dataBind)[0])['user_email'];
             
@@ -43,26 +44,32 @@ class Session{
 
     //This function destroy a session
     public function sessionDestroy($id){
+        $result=false;
         $validSession=$this->sessionIsValid($id);
+        
         if($validSession){
+            $result=true;
             $dataBind=array("session_id"=>$id);
             $this->db->delete("Session", $dataBind);
+
             session_id($id);
             session_start();    
             session_destroy();
         }
+        return $result;
     }
 
 
    //This function verify  if a session is valid
     public function sessionIsValid($id){  
         $dataBind=array("session_id"=>$id);
-        $foundSession=$this->db->count("*", "Session", $dataBind);
+        echo $foundSession=$this->db->count("*", "Session", $dataBind);
         $result=false;
 
         if($foundSession>0){
            $result=true;
         }
+
         return $result;
     }
 

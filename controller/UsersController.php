@@ -17,6 +17,10 @@
 			$this->postView->result($this->model->login($data));
 		}	
 
+		public function logout($data){
+			$this->postView->result($this->model->logout($data));
+		}	
+
 		public function signup($data){
 			$this->postView->result($this->model->signup($data));
 		}			

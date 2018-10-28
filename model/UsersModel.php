@@ -8,15 +8,16 @@
 	
 		
 		private $db;
+		private $session;
 		
 		//Class Construct 
 		public function __construct(){
+			$this->session=new Session();
 			$this->db=new DatabaseFunctions();
 		}
 		
 	
 		public function login($rawData){
-			
 			$rawData=$this->validateRawData($rawData); 
 			$email=isset($rawData['email']) ? $rawData['email'] : "";
 			$password=isset($rawData['password']) ? $rawData['password'] : "";
@@ -45,14 +46,22 @@
 				$foundUsers=$this->db->count("*", "Users", $data, "and");
 				
 				if($foundUsers>0){
-					$session=new Session();
-					$session->sessionStart($email);
+					$this->session->sessionStart($email);
 					$result['successfull']=true;
-					$result['session']=$session->getId();
-
+					$result['session']=$this->session->getId();
 				}
 			}
 
+			return $result;
+		}
+
+
+		//This function logout the user
+		public function logout($rawData){
+			$data=$this->validateRawData($rawData);
+			$id=isset($data['session']) ? $data['session'] : "";
+			
+			$result['logout']=$this->session->sessionDestroy($id);
 			return $result;
 		}
 
@@ -115,6 +124,7 @@
 			return $data;
 		}
 		
+
 		//Name validation
 		public function verifyName($name){
 			$result=false;
