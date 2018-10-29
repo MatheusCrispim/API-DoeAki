@@ -1,11 +1,10 @@
 <?php
-	
+
+
 	require_once (__DIR__)."/../dao/DatabaseFunctions.php";
 	require_once (__DIR__)."/../middleware/Session.php";
-
 	
 	class UsersModel{
-	
 		
 		private $db;
 		private $session;
@@ -17,7 +16,7 @@
 		}
 		
 	
-
+		//This function logs the user in 
 		public function login($rawData){
 			$data=$this->validateRawData($rawData); 
 			$email=isset($data['email']) ? $data['email'] : "";
@@ -57,6 +56,7 @@
 		}
 
 
+		//This function verify if user is logged
 		public function isLogged($rawData){
 			$data=$this->validateRawData($rawData);
 			$id=isset($data['session']) ? $data['session'] : "";
@@ -67,6 +67,7 @@
 			return $result;
 		}
 
+		
 		//This function logout the user
 		public function logout($rawData){
 			$data=$this->validateRawData($rawData);
@@ -105,9 +106,8 @@
 			if($passwordValidation){
 				$result['password']=true;	
 			}
-			
 			$validation=($nameValidation and $emailValidation and $passwordValidation);
-			
+
 			if($validation){
 				$result['validation']=true;
 				$emailBind=array('email'=>$data['email']);
@@ -123,6 +123,12 @@
 			return $result;
 		}
 		
+
+		//This function returns the user info
+		public function getUser($item, $data){
+			return $this->db->select($item, "Users", $data, "or");
+		}
+
 
 		//This function validates raw data sent in the request
 		public function validateRawData($rawData){

@@ -1,5 +1,6 @@
 <?php 
 	require_once (__DIR__)."/../model/UsersModel.php";
+
 	require_once (__DIR__)."/../view/PostView.php";
 	
 	
@@ -29,6 +30,10 @@
 			$this->postView->result($this->model->signup($data));
 		}			
 		
+		public function getUser($item, $data){
+			$this->postView->result($this->model->getUser($item, $data));
+		}	
+
 		public function fail($message){
 			$this->postView->fail($message);
 		}

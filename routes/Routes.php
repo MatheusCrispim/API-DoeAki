@@ -1,10 +1,12 @@
 <?php
 
 	require_once (__DIR__)."/../controller/Controllers.php";
+	require_once (__DIR__)."/../middleware/Middleware.php";
 	require_once (__DIR__)."/config.php";
 
 	class Routes{
-		
+	
+		private $middleware;
 		private $defaultController;
 		private $usersController;
 		private $institutionsController;
@@ -13,6 +15,7 @@
 
 		
 		public function __construct(){
+			$this->middleware=new Middleware();
 			$this->defaultController=new DefaultController();
 			$this->usersController=new UsersController();
 			$this->institutionsController=new InstitutionsController();
@@ -21,6 +24,8 @@
 		
 		
 		public function execute(){
+			$token=isset($_SERVER['HTTP_TOKEN'])? $_SERVER['HTTP_TOKEN']: "";
+			$this->middleware->auth($token);
 			return $this->action();	
 		}
 		
@@ -51,6 +56,7 @@
 					$this->getInstitutions();
 					break;
 				case "USER":
+					$this->getUser();
 					break;
 				default:
 					$this->defaultController->fail("Can't get nothing");
@@ -72,7 +78,21 @@
 					break;
 			}			
 		}
-			
+		
+
+		private function getUser(){
+			$controller=$this->usersController;
+			$searchType=isset($this->paths[2]) ? $this->paths[2] : null;
+			switch($searchType){		
+				case "DATA":
+					$this->data=array("email"=>$this->middleware->getUser());
+					$this->middleware->execute([$controller, 'getUser'], '*', $this->data);
+					break;
+				default:
+					$controller->fail("Can't get nothing");
+					break;
+			}
+		}
 					
 		private function getInstitutions(){
 			$controller=$this->institutionsController;

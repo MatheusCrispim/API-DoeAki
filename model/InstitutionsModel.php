@@ -5,7 +5,6 @@
 	
 	class InstitutionsModel{
 	
-		
 		private $db;
 		
 		//Class Construct 
@@ -13,6 +12,7 @@
 			$this->db=new DatabaseFunctions();
 		}
 		
+
 		//This method returns the nearby institutions
 		public function getNearbyInstitutions($data){
 			$cmmd="SELECT *,
@@ -30,6 +30,7 @@
 			
 			return $this->db->execute($cmmd, $data)->fetchAll();			
 		}
+		
 		
 		//This method returns the institutions searched by the user, according to the $where params
 		public function getInstitutions($item, $data){
