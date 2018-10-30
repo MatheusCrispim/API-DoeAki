@@ -23,7 +23,6 @@
 		
 		
 		public function execute(){
-
 			$token=isset($_SERVER['HTTP_TOKEN'])? $_SERVER['HTTP_TOKEN']: "";
 			$this->middleware->auth($token);
 			return $this->action();	

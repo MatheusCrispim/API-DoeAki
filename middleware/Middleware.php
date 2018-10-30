@@ -30,7 +30,7 @@
             if($this->authenticated){
                 call_user_func($callbackSucess, $param1, $param2);
             }
-           // header("HTTP/1.1 401 Unauthorized");
+           header("HTTP/1.1 401 Unauthorized");
         }
 
         
