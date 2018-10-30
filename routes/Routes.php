@@ -1,5 +1,4 @@
 <?php
-
 	require_once (__DIR__)."/../controller/Controllers.php";
 	require_once (__DIR__)."/../middleware/Middleware.php";
 	require_once (__DIR__)."/config.php";
@@ -24,6 +23,7 @@
 		
 		
 		public function execute(){
+
 			$token=isset($_SERVER['HTTP_TOKEN'])? $_SERVER['HTTP_TOKEN']: "";
 			$this->middleware->auth($token);
 			return $this->action();	
@@ -86,7 +86,7 @@
 			switch($searchType){		
 				case "DATA":
 					$this->data=array("email"=>$this->middleware->getUser());
-					$this->middleware->execute([$controller, 'getUser'], '*', $this->data);
+					$this->middleware->execute([$controller, 'getUser'], "name, email", $this->data);
 					break;
 				default:
 					$controller->fail("Can't get nothing");
