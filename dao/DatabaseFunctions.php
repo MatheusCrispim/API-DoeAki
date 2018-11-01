@@ -145,9 +145,9 @@ class DatabaseFunctions{
 			}else if($use=="EQUAL_KEY"){
 				foreach($data as $key=>$d){
 					if($fv==0){
-						$c.=$key."=".$pre.$key;
+						$c.=$key." LIKE ".$pre.$key;
 					}else{
-						$c.=$sep.$key."=".$pre.$key;
+						$c.=$sep.$key." LIKE ".$pre.$key;
 					}
 					$fv++;
 				}				
