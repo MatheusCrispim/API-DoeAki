@@ -26,9 +26,9 @@
 
 
         //This function executes the callback functions
-        public function execute($callbackSucess, $param1, $param2){
+        public function execute($callbackSucess){
             if($this->authenticated){
-               return call_user_func($callbackSucess, $param1, $param2);
+               return call_user_func($callbackSucess);
             }
            header("HTTP/1.1 401 Unauthorized");
         }

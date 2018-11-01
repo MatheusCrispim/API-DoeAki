@@ -23,8 +23,7 @@
 		
 		
 		public function execute(){			
-			$token=isset($_SERVER['HTTP_TOKEN'])? $_SERVER['HTTP_TOKEN']: "";
-
+			$token=isset($_SERVER['HTTP_SESSION'])? $_SERVER['HTTP_SESSION']: "";
 			$this->middleware->auth($token);
 			return $this->action();	
 		}
@@ -35,7 +34,8 @@
 			switch($action){		
 				case "GET":
 					$this->data=$_GET;
-					$this->get();
+					$this->middleware->execute([$this, 'get']);
+					//$this->get();
 					break;
 				case "POST":
 					$this->data=json_decode(file_get_contents("php://input"), true);
@@ -69,6 +69,8 @@
 			$context=isset($this->paths[1]) ? $this->paths[1] : null;
 			switch($context){		
 				case "INSTITUTIONS":
+					$this->middleware->execute([$this, 'postInstitutions']);
+					//$this->postInstitutions();
 					break;
 				case "USER":
 					$this->postUsers();
@@ -80,20 +82,20 @@
 		}
 		
 
-		private function getUser(){
-			$controller=$this->usersController;
+		private function postInstitutions(){
+			$controller=$this->institutionsController;
 			$searchType=isset($this->paths[2]) ? $this->paths[2] : null;
 			switch($searchType){		
-				case "DATA":
-					$this->data=array("email"=>$this->middleware->getUser());
-					$this->middleware->execute([$controller, 'getUser'], "name, email", $this->data);
+				case "REGISTER":
+					$controller->registerInstitution($this->data);
 					break;
 				default:
 					$controller->fail("Can't get nothing");
 					break;
 			}
 		}
-					
+		
+		
 		private function getInstitutions(){
 			$controller=$this->institutionsController;
 			$searchType=isset($this->paths[2]) ? $this->paths[2] : null;
@@ -102,7 +104,10 @@
 					$controller->getNearbyInstitutions($this->data);
 					break;
 				case "NORMAL":
-					$controller->getInstitutions($this->data);
+					$controller->getInstitutions("*", $this->data);
+					break;
+				case "DONATION":
+					$controller->getDonationData("*", $this->data);
 					break;
 				default:
 					$controller->fail("Can't get nothing");
@@ -111,6 +116,21 @@
 		}
 		
 		
+		private function getUser(){
+			$controller=$this->usersController;
+			$searchType=isset($this->paths[2]) ? $this->paths[2] : null;
+			switch($searchType){		
+				case "DATA":
+					$this->data=array("email"=>$this->middleware->getUser());
+					$controller->getUser("name, email, image",  $this->data);
+					break;
+				default:
+					$controller->fail("Can't get nothing");
+					break;
+			}
+		}
+
+
 		private function postUsers(){
 			$context=isset($this->paths[2]) ? $this->paths[2] : null;
 			$controller=$this->usersController;
