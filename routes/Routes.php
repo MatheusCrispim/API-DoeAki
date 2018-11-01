@@ -82,7 +82,7 @@
 		}
 		
 
-		private function postInstitutions(){
+		public function postInstitutions(){
 			$controller=$this->institutionsController;
 			$searchType=isset($this->paths[2]) ? $this->paths[2] : null;
 			switch($searchType){		
@@ -96,7 +96,7 @@
 		}
 		
 		
-		private function getInstitutions(){
+		public function getInstitutions(){
 			$controller=$this->institutionsController;
 			$searchType=isset($this->paths[2]) ? $this->paths[2] : null;
 			switch($searchType){		
@@ -116,7 +116,7 @@
 		}
 		
 		
-		private function getUser(){
+		public function getUser(){
 			$controller=$this->usersController;
 			$searchType=isset($this->paths[2]) ? $this->paths[2] : null;
 			switch($searchType){		
@@ -131,7 +131,7 @@
 		}
 
 
-		private function postUsers(){
+		public function postUsers(){
 			$context=isset($this->paths[2]) ? $this->paths[2] : null;
 			$controller=$this->usersController;
 			switch($context){
